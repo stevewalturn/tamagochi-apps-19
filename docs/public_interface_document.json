@@ -1,7 +1,7 @@
 {
   "package_name": "com.walturn.my_app",
-  "project_description": "The Flutter application follows the Stacked architecture, featuring routing, dependency injection, and dialog/bottom sheet management. It includes a startup screen, a home screen with a counter, a dialog, and a bottom sheet. The application also integrates with Firebase for analytics tracking and supports localization and multiple flavors (development and production).",
-  "architecture_overview": "The application is structured using the Stacked architecture, which separates the concerns of the UI, view models, and services. It uses Stacked for state management, routing, and dependency injection. The main components include the App, AppView, and various feature-specific views and view models. The application also utilizes services for managing dialogs, bottom sheets, and navigation, as well as observing screen transitions for analytics purposes.",
+  "project_description": "A Flutter application demonstrating a comprehensive architecture utilizing Stacked framework, featuring a startup flow, home screen with counter functionality, custom dialogs, bottom sheets, and localization support. The app provides a modular structure with clear separation of concerns, supporting multiple environments (development and production), and integrating Firebase analytics tracking.",
+  "architecture_overview": "Implemented using Stacked architecture with a robust dependency injection system, the application follows MVVM design principles. Key components include view models for each screen, centralized service management, custom dialog and bottom sheet implementations, and a flexible routing mechanism. The architecture emphasizes modularity, testability, and scalability through dependency inversion and service locator patterns.",
   "files": [
     {
       "name": "lib/app/app.dart",
@@ -221,82 +221,12 @@
       ]
     },
     {
-      "name": "lib/observer/screen_observer.dart",
-      "description": "The ScreenObserver class is responsible for tracking the screen views of the application using the AnalyticService. It is a NavigatorObserver that listens for navigation events and logs screen transitions to the analytics service.",
-      "class_diagram": "@startuml\nclass ScreenObserver extends NavigatorObserver {\n  + ScreenObserver()\n  + void didPush(Route<dynamic> route, Route<dynamic>? previousRoute)\n  + void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute})\n  + void didPop(Route<dynamic> route, Route<dynamic>? previousRoute)\n  - void _trackScreenView(Route<dynamic> route)\n}\n\nAnalyticService --* ScreenObserver\n@enduml",
-      "methods": [
-        {
-          "name": "didPush",
-          "description": "Tracks the screen view when a new route is pushed onto the navigation stack.",
-          "parameters": [
-            "Route<dynamic> route",
-            "Route<dynamic>? previousRoute"
-          ],
-          "return_type": "void"
-        },
-        {
-          "name": "didReplace",
-          "description": "Tracks the screen view when a route is replaced in the navigation stack.",
-          "parameters": [
-            "Route<dynamic>? newRoute",
-            "Route<dynamic>? oldRoute"
-          ],
-          "return_type": "void"
-        },
-        {
-          "name": "didPop",
-          "description": "Tracks the screen view when a route is popped from the navigation stack.",
-          "parameters": [
-            "Route<dynamic> route",
-            "Route<dynamic>? previousRoute"
-          ],
-          "return_type": "void"
-        },
-        {
-          "name": "_trackScreenView",
-          "description": "Logs the screen view to the AnalyticService based on the current route.",
-          "parameters": [
-            "Route<dynamic> route"
-          ],
-          "return_type": "void"
-        }
-      ],
-      "dependencies": [
-        "flutter/material.dart",
-        "my_app/services/analytic_service.dart"
-      ]
-    },
-    {
       "name": "lib/ui/common/app_colors.dart",
       "description": "This Dart file defines a set of reusable color constants that represent the primary color palette of the application. These colors are used throughout the UI to ensure a consistent and branded visual experience.",
       "class_diagram": "",
       "methods": [],
       "dependencies": [
         "package:flutter/material.dart"
-      ]
-    },
-    {
-      "name": "lib/ui/bottom_sheets/notice/notice_sheet_model.dart",
-      "description": "The NoticeSheetModel class is responsible for managing the state and behavior of the notice bottom sheet UI component in the application. It provides the core functionality and business logic for displaying and interacting with the notice sheet.",
-      "class_diagram": "@startuml\nclass NoticeSheetModel {\n  +showNotice()\n  +dismissNotice()\n  +isLoading : bool\n  +noticeMessage : String\n}\n@enduml",
-      "methods": [
-        {
-          "name": "showNotice",
-          "description": "Displays the notice bottom sheet with the specified message.",
-          "parameters": [
-            "message"
-          ],
-          "return_type": "void"
-        },
-        {
-          "name": "dismissNotice",
-          "description": "Dismisses the currently displayed notice bottom sheet.",
-          "parameters": null,
-          "return_type": "void"
-        }
-      ],
-      "dependencies": [
-        "stacked/stacked.dart"
       ]
     },
     {
@@ -343,379 +273,6 @@
       ]
     },
     {
-      "name": "lib/ui/bottom_sheets/notice/notice_sheet.dart",
-      "description": "The NoticeSheet class is responsible for displaying a bottom sheet with a notice or alert message to the user. It is part of the UI layer of the application and is used to present important information or updates to the user in a modal dialog.",
-      "class_diagram": "@startuml\n  class NoticeSheet {\n    + NoticeSheet({required this.completer, required this.request})\n    + Widget builder(BuildContext context, NoticeSheetModel viewModel, Widget? child)\n    + NoticeSheetModel viewModelBuilder(BuildContext context)\n  }\n\n  class NoticeSheetModel {\n    # NoticeSheetModel()\n  }\n\n  NoticeSheet --> NoticeSheetModel\n  @enduml",
-      "methods": [
-        {
-          "name": "builder",
-          "description": "Builds the UI of the NoticeSheet, which includes the title, description, and any other relevant content.",
-          "parameters": [
-            "BuildContext context",
-            "NoticeSheetModel viewModel",
-            "Widget? child"
-          ],
-          "return_type": "Widget"
-        },
-        {
-          "name": "viewModelBuilder",
-          "description": "Provides an instance of the NoticeSheetModel, which is used to manage the state and logic of the NoticeSheet.",
-          "parameters": [
-            "BuildContext context"
-          ],
-          "return_type": "NoticeSheetModel"
-        }
-      ],
-      "dependencies": [
-        "package:flutter/material.dart",
-        "package:my_app/ui/bottom_sheets/notice/notice_sheet_model.dart",
-        "package:my_app/ui/common/app_colors.dart",
-        "package:my_app/ui/common/ui_helpers.dart",
-        "package:stacked/stacked.dart",
-        "package:stacked_services/stacked_services.dart"
-      ]
-    },
-    {
-      "name": "lib/ui/dialogs/info_alert/info_alert_dialog_model.dart",
-      "description": "This Dart file contains the `InfoAlertDialogModel` class, which is responsible for managing the state and behavior of an information alert dialog in a Flutter application.",
-      "class_diagram": "@startuml\nclass InfoAlertDialogModel {\n}\nInfoAlertDialogModel -[hidden]- BaseViewModel\n@enduml",
-      "methods": [
-        {
-          "name": "InfoAlertDialogModel",
-          "description": "The constructor for the `InfoAlertDialogModel` class.",
-          "parameters": null,
-          "return_type": null
-        }
-      ],
-      "dependencies": [
-        "package:stacked/stacked.dart"
-      ]
-    },
-    {
-      "name": "lib/ui/views/app/app_viewmodel.dart",
-      "description": "The AppViewModel class is responsible for managing the state and behavior of the main application view in a Flutter application. It serves as the ViewModel component in the Model-View-ViewModel (MVVM) architecture, which separates the presentation logic from the business logic.",
-      "class_diagram": "@startuml\nclass AppViewModel extends BaseViewModel {\n}\n@enduml",
-      "methods": [],
-      "dependencies": [
-        "package:stacked/stacked.dart"
-      ]
-    },
-    {
-      "name": "lib/ui/views/home/home_view.dart",
-      "description": "The `HomeView` class is responsible for rendering the main UI of the application's home screen. It provides a simple interface for displaying a counter value and allowing the user to interact with the screen by incrementing the counter, showing a dialog, or displaying a bottom sheet.",
-      "class_diagram": "@startuml\nclass HomeView {\n  +builder(BuildContext, HomeViewModel, Widget?): Widget\n  +viewModelBuilder(BuildContext): HomeViewModel\n}\n\nclass HomeViewModel {\n  +incrementCounter(): void\n  +showDialog(): void\n  +showBottomSheet(): void\n  +counterLabel: String\n}\n@enduml",
-      "methods": [
-        {
-          "name": "builder",
-          "description": "Builds the UI of the home screen, including the counter display, increment button, dialog button, and bottom sheet button.",
-          "parameters": [
-            "BuildContext",
-            "HomeViewModel",
-            "Widget?"
-          ],
-          "return_type": "Widget"
-        },
-        {
-          "name": "viewModelBuilder",
-          "description": "Provides an instance of the `HomeViewModel` to be used by the `HomeView`.",
-          "parameters": [
-            "BuildContext"
-          ],
-          "return_type": "HomeViewModel"
-        }
-      ],
-      "dependencies": [
-        "flutter/material.dart",
-        "gap/gap.dart",
-        "my_app/ui/views/home/home_viewmodel.dart",
-        "stacked/stacked.dart"
-      ]
-    },
-    {
-      "name": "lib/ui/views/home/home_viewmodel.dart",
-      "description": "The HomeViewModel class is responsible for managing the state and behavior of the home screen in the application. It provides the core functionality for handling the counter value and displaying it, as well as providing methods to show a custom dialog and a bottom sheet.",
-      "class_diagram": "@startuml\nclass HomeViewModel {\n  - _dialogService: DialogService\n  - _bottomSheetService: BottomSheetService\n  - _counter: int\n  + counterLabel: String\n  + incrementCounter(): void\n  + showDialog(): void\n  + showBottomSheet(): void\n}\n@enduml",
-      "methods": [
-        {
-          "name": "counterLabel",
-          "description": "Returns a string representation of the current counter value.",
-          "parameters": null,
-          "return_type": "String"
-        },
-        {
-          "name": "incrementCounter",
-          "description": "Increments the counter value and rebuilds the UI.",
-          "parameters": null,
-          "return_type": "void"
-        },
-        {
-          "name": "showDialog",
-          "description": "Displays a custom dialog with a title and description.",
-          "parameters": null,
-          "return_type": "void"
-        },
-        {
-          "name": "showBottomSheet",
-          "description": "Displays a custom bottom sheet with a title and description.",
-          "parameters": null,
-          "return_type": "void"
-        }
-      ],
-      "dependencies": [
-        "my_app/app/app.bottomsheets.dart",
-        "my_app/app/app.dialogs.dart",
-        "my_app/app/app.locator.dart",
-        "stacked/stacked.dart",
-        "stacked_services/stacked_services.dart"
-      ]
-    },
-    {
-      "name": "lib/ui/views/startup/startup_view.dart",
-      "description": "The `StartupView` class in this file is responsible for the initial startup screen of the application. It is the main entry point for the user when they launch the app, displaying the app's logo and a loading indicator while the app's startup logic is being executed.",
-      "class_diagram": "@startuml\nclass StartupView {\n  + builder(BuildContext, StartupViewModel, Widget?): Widget\n  + viewModelBuilder(BuildContext): StartupViewModel\n  + onViewModelReady(StartupViewModel): void\n}\n\nclass StartupViewModel {\n  + runStartupLogic(): void\n}\n\nStartupView --> StartupViewModel\n@enduml",
-      "methods": [
-        {
-          "name": "builder",
-          "description": "Builds the UI for the startup screen, displaying the app's logo and a loading indicator.",
-          "parameters": [
-            "BuildContext",
-            "StartupViewModel",
-            "Widget?"
-          ],
-          "return_type": "Widget"
-        },
-        {
-          "name": "viewModelBuilder",
-          "description": "Provides an instance of the `StartupViewModel` to be used by the `StartupView`.",
-          "parameters": [
-            "BuildContext"
-          ],
-          "return_type": "StartupViewModel"
-        },
-        {
-          "name": "onViewModelReady",
-          "description": "Called when the `StartupViewModel` is ready, triggering the execution of the app's startup logic.",
-          "parameters": [
-            "StartupViewModel"
-          ],
-          "return_type": null
-        }
-      ],
-      "dependencies": [
-        "flutter/material.dart",
-        "flutter/scheduler.dart",
-        "gap/gap.dart",
-        "my_app/ui/views/startup/startup_viewmodel.dart",
-        "stacked/stacked.dart"
-      ]
-    },
-    {
-      "name": "lib/ui/views/startup/startup_viewmodel.dart",
-      "description": "The StartupViewModel class is responsible for handling the initial startup logic of the application. It is responsible for delaying the application launch by a few seconds and then navigating to the home view, which is the main entry point of the application.",
-      "class_diagram": "@startuml\n  class StartupViewModel {\n    -_navigationService : NavigationService\n    +runStartupLogic() : Future\n  }\n  @enduml",
-      "methods": [
-        {
-          "name": "runStartupLogic",
-          "description": "This method is responsible for the core startup logic of the application. It delays the application launch by 3 seconds and then navigates to the home view using the NavigationService.",
-          "parameters": [
-            "None"
-          ],
-          "return_type": "Future"
-        }
-      ],
-      "dependencies": [
-        "my_app/app/app.locator.dart",
-        "my_app/app/app.router.dart",
-        "stacked/stacked.dart",
-        "stacked_services/stacked_services.dart"
-      ]
-    },
-    {
-      "name": "lib/config/production/firebase_options_production.dart",
-      "description": "This file defines the Firebase configuration options for the production environment of the application. It is responsible for providing the necessary Firebase-related settings and credentials to integrate the application with the Firebase services in the production environment.",
-      "class_diagram": "",
-      "methods": [],
-      "dependencies": [
-        "package:firebase_core/firebase_core.dart",
-        "lib/config/firebase_options.dart"
-      ]
-    },
-    {
-      "name": "lib/utils/const/const.dart",
-      "description": "This file contains a set of constant values and data structures that are used throughout the application. It serves as a centralized repository for global configuration and settings, providing a consistent and easily accessible way to manage application-wide constants.",
-      "class_diagram": "@startuml\n' Enumerations and Constants\npublicConstant totalOnboarding : int\npublicConstant onBoardingHeaderTag : String\npublicConstant pathCompliantStatement : String\npublicConstant pathTermsOfServices : String\npublicConstant defaultContactEmail : String\npublicConstant defaultContactPhone : String\npublicConstant introYoutubeId : String\npublicConstant defaultLanguagesList : List<Map<String, String>>\n@enduml",
-      "methods": [],
-      "dependencies": []
-    },
-    {
-      "name": "lib/utils/contact/contact_util.dart",
-      "description": "The `ContactUtil` class provides utility functions for launching WhatsApp and email communication from a Flutter application. It handles the platform-specific logic to open the appropriate communication channels for the user's device.",
-      "class_diagram": "@startuml\nclass ContactUtil {\n  +static Future<void> launchWhatsApp(String phone, {String text = ''})\n  +static Future<void> launchEmail(String email)\n}\n@enduml",
-      "methods": [
-        {
-          "name": "launchWhatsApp",
-          "description": "Launches the WhatsApp application or the WhatsApp web interface with a pre-filled message and recipient phone number.",
-          "parameters": [
-            "phone",
-            "text"
-          ],
-          "return_type": "Future<void>"
-        },
-        {
-          "name": "launchEmail",
-          "description": "Launches the default email application with the specified email address.",
-          "parameters": [
-            "email"
-          ],
-          "return_type": "Future<void>"
-        }
-      ],
-      "dependencies": [
-        "dart:async",
-        "dart:io",
-        "package:url_launcher/url_launcher.dart"
-      ]
-    },
-    {
-      "name": "lib/utils/date/date_util.dart",
-      "description": "The `DateUtil` class provides a set of utility functions for handling date and time data in the application, particularly when interacting with Firestore.",
-      "class_diagram": "@startuml\nclass DateUtil {\n  + static DateTime? fromJson(dynamic value)\n}\n@enduml",
-      "methods": [
-        {
-          "name": "fromJson",
-          "description": "Extracts a `DateTime` object from a dynamic input value, which can be a `Timestamp` from Firestore, a `String` representation of a date and time, or a `DateTime` object directly.",
-          "parameters": [
-            "dynamic value"
-          ],
-          "return_type": "DateTime?"
-        }
-      ],
-      "dependencies": [
-        "cloud_firestore/cloud_firestore.dart"
-      ]
-    },
-    {
-      "name": "lib/utils/exceptions/api_exception.dart",
-      "description": "This file defines a custom exception class `APIException` that is used to handle and propagate exceptions that occur during API service interactions. It provides a standardized way to handle and communicate errors that arise in the application's API layer.",
-      "class_diagram": "@startuml\n  class APIException implements Exception {\n    -dynamic message\n    +toString(): String\n  }\n  @enduml",
-      "methods": [
-        {
-          "name": "APIException",
-          "description": "Constructor for the `APIException` class. Allows for the creation of a new `APIException` instance with an optional error message.",
-          "parameters": [
-            "message"
-          ],
-          "return_type": null
-        },
-        {
-          "name": "toString",
-          "description": "Overrides the default `toString()` method to provide a string representation of the `APIException` instance, including the runtime type and the error message.",
-          "parameters": null,
-          "return_type": "String"
-        }
-      ],
-      "dependencies": [
-        "dart:core"
-      ]
-    },
-    {
-      "name": "lib/utils/extensions/color_extension.dart",
-      "description": "This Dart file provides a custom extension on the Flutter `Color` class, adding utility methods for converting hexadecimal color strings to `Color` objects and integer values. This extension simplifies the process of working with color-related functionality in the application, improving developer productivity and maintainability.",
-      "class_diagram": "@startuml\nclass Color {\n  +static Color fromHex(String hexColorString)\n  +static int intFromHex(String hexColorString)\n}\n@enduml",
-      "methods": [
-        {
-          "name": "fromHex",
-          "description": "Converts a hexadecimal color string (e.g., '#FF0000' for red) to a `Color` object.",
-          "parameters": [
-            "hexColorString"
-          ],
-          "return_type": "Color"
-        },
-        {
-          "name": "intFromHex",
-          "description": "Converts a hexadecimal color string (e.g., '#FF0000' for red) to an integer value representing the color.",
-          "parameters": [
-            "hexColorString"
-          ],
-          "return_type": "int"
-        }
-      ],
-      "dependencies": [
-        "package:flutter/material.dart"
-      ]
-    },
-    {
-      "name": "lib/utils/flavors/flavors.dart",
-      "description": "This file defines a singleton class 'Flavors' that is responsible for managing the current application flavor, which is typically used to differentiate between development, staging, and production environments. The main purpose of this class is to provide a centralized way to access and check the current application flavor, enabling the application to behave differently based on the specific environment it is running in.",
-      "class_diagram": "@startuml\nclass Flavors {\n  - static Flavor? flavor\n  + static bool get isDev()\n  + static bool get isProd()\n}\n@enduml",
-      "methods": [
-        {
-          "name": "Flavors",
-          "description": "Private constructor for the Flavors class, ensuring a singleton instance.",
-          "parameters": null,
-          "return_type": null
-        },
-        {
-          "name": "Flavors.factory",
-          "description": "Factory constructor for the Flavors class, returning the singleton instance.",
-          "parameters": null,
-          "return_type": "Flavors"
-        },
-        {
-          "name": "isDev",
-          "description": "Getter that returns true if the current application flavor is Flavor.development.",
-          "parameters": null,
-          "return_type": "bool"
-        },
-        {
-          "name": "isProd",
-          "description": "Getter that returns true if the current application flavor is Flavor.production.",
-          "parameters": null,
-          "return_type": "bool"
-        }
-      ],
-      "dependencies": [
-        "my_app/models/enums/flavor.dart"
-      ]
-    },
-    {
-      "name": "lib/utils/json/json_util.dart",
-      "description": "The JsonUtil class is responsible for providing utility functions to handle JSON data in the application. It solves the problem of safely and consistently parsing and formatting JSON data, which is a common task in modern web and mobile applications.",
-      "class_diagram": "@startuml\nclass JsonUtil {\n  +static Map<String, dynamic> formatMap(Map<dynamic, dynamic>)\n  +static T? fromJsonOrNull<T>(dynamic, T Function(Map<String, dynamic>))\n  +static List<T> formatListMap<T>(List<dynamic>, T Function(Map<String, dynamic>))\n}\n@enduml",
-      "methods": [
-        {
-          "name": "formatMap",
-          "description": "Converts a Map<dynamic, dynamic> to a Map<String, dynamic> by removing any null keys.",
-          "parameters": [
-            "Map<dynamic, dynamic>"
-          ],
-          "return_type": "Map<String, dynamic>"
-        },
-        {
-          "name": "fromJsonOrNull",
-          "description": "Safely converts a dynamic JSON value to an instance of type T, or returns null if the input is invalid.",
-          "parameters": [
-            "dynamic",
-            "T Function(Map<String, dynamic>)"
-          ],
-          "return_type": "T?"
-        },
-        {
-          "name": "formatListMap",
-          "description": "Converts a List<dynamic> of JSON objects to a List<T> by applying the given fromJson function to each object.",
-          "parameters": [
-            "List<dynamic>",
-            "T Function(Map<String, dynamic>)"
-          ],
-          "return_type": "List<T>"
-        }
-      ],
-      "dependencies": [
-        "dart:core",
-        "dart:collection"
-      ]
-    },
-    {
       "name": "lib/ui/dialogs/info_alert/info_alert_dialog.dart",
       "description": "This file defines an InfoAlertDialog class, which is responsible for displaying an informative alert dialog with a title, description, and a confirmation button. The primary purpose of this class is to provide a reusable and customizable way to present important information to the user within the application.",
       "class_diagram": "@startuml\nclass InfoAlertDialog {\n  -DialogRequest request\n  -Function(DialogResponse) completer\n  +builder(BuildContext, InfoAlertDialogModel, Widget?): Widget\n  +viewModelBuilder(BuildContext): InfoAlertDialogModel\n}\n\nclass InfoAlertDialogModel {\n}\n\nInfoAlertDialog *-- InfoAlertDialogModel\n@enduml",
@@ -746,16 +303,6 @@
         "package:my_app/ui/dialogs/info_alert/info_alert_dialog_model.dart",
         "package:stacked/stacked.dart",
         "package:stacked_services/stacked_services.dart"
-      ]
-    },
-    {
-      "name": "lib/config/development/firebase_options_development.dart",
-      "description": "This Dart file is responsible for providing the configuration options for the Firebase service in the development environment of the application. It defines the necessary credentials and settings to initialize and interact with the Firebase platform during the development phase.",
-      "class_diagram": "",
-      "methods": [],
-      "dependencies": [
-        "firebase_core",
-        "flutter_dotenv"
       ]
     },
     {
@@ -817,28 +364,272 @@
       ]
     },
     {
-      "name": "lib/ui/views/app/app_view.dart",
-      "description": "The `AppView` class is the main entry point for the Flutter application. It is responsible for setting up the overall application structure, including the navigation, localization, and event handling. This class serves as the foundation for the entire application, providing the core functionality and user experience.",
-      "class_diagram": "@startuml\nclass AppView {\n  +build(context, viewModel): Widget\n}\n\nclass _App {\n  +build(context, viewModel): Widget\n}\n\nAppView *-- _App\n@enduml",
+      "name": "lib/features/app/app_viewmodel.dart",
+      "description": "A base view model for the application using the Stacked architecture pattern, providing a foundational structure for managing application state and logic across different views",
+      "class_diagram": "@startuml\nclass AppViewModel {\n}\nBaseViewModel <|-- AppViewModel\n@enduml",
+      "methods": [
+        {
+          "name": "constructor",
+          "description": "Creates an instance of AppViewModel, inheriting core reactive and lifecycle management capabilities from BaseViewModel",
+          "parameters": null,
+          "return_type": null
+        }
+      ],
+      "dependencies": [
+        "package:stacked/stacked.dart"
+      ]
+    },
+    {
+      "name": "lib/features/app/app_view.dart",
+      "description": "Provides the root configuration and setup for the Flutter application, defining the global app structure, routing, localization, and base theme settings",
+      "class_diagram": "@startuml\nclass AppView {\n  +build(context: BuildContext): Widget\n}\nclass _App {\n  +build(context: BuildContext): Widget\n}\n@enduml",
       "methods": [
         {
           "name": "build",
-          "description": "Builds the main application widget tree, including the MaterialApp, navigation, localization, and event handling.",
+          "description": "Creates the root MaterialApp with global configurations like routing, localization, and theme",
           "parameters": [
-            "context",
-            "viewModel"
+            "context"
           ],
           "return_type": "Widget"
         }
       ],
       "dependencies": [
         "package:flutter/material.dart",
-        "package:my_app/app/app.router.dart",
-        "package:my_app/l10n/supported_locales.dart",
-        "package:my_app/observer/screen_observer.dart",
-        "package:my_app/ui/views/app/app_viewmodel.dart",
+        "package:stacked_services/stacked_services.dart",
+        "app.router.dart",
+        "ui/common/app_colors.dart",
+        "l10n/supported_locales.dart"
+      ]
+    },
+    {
+      "name": "lib/shared/ui/bottom_sheets/notice_sheet.dart",
+      "description": "A reusable bottom sheet widget for displaying informative notices or alerts with a title and description, designed to provide contextual user information with a consistent UI presentation",
+      "class_diagram": "@startuml\nclass NoticeSheet {\n  +completer: Function(SheetResponse)\n  +request: SheetRequest\n  +build(context: BuildContext): Widget\n}\n@enduml",
+      "methods": [
+        {
+          "name": "build",
+          "description": "Renders a styled bottom sheet with a title and description using provided request data",
+          "parameters": [
+            "context"
+          ],
+          "return_type": "Widget"
+        }
+      ],
+      "dependencies": [
+        "flutter/material.dart",
+        "stacked_services/stacked_services.dart",
+        "my_app/ui/common/app_colors.dart",
+        "my_app/ui/common/ui_helpers.dart"
+      ]
+    },
+    {
+      "name": "lib/utils/flavors.dart",
+      "description": "Manages application flavor configurations, enabling environment-specific settings and feature toggles between development and production environments",
+      "class_diagram": "@startuml\nclass Flavors {\n  +{static} isDev: bool\n  +{static} isProd: bool\n  +{static} flavor: Flavor\n}\n@enduml",
+      "methods": [
+        {
+          "name": "isDev",
+          "description": "Checks if current app environment is development",
+          "parameters": null,
+          "return_type": "bool"
+        },
+        {
+          "name": "isProd",
+          "description": "Checks if current app environment is production",
+          "parameters": null,
+          "return_type": "bool"
+        }
+      ],
+      "dependencies": [
+        "my_app/models/enums/flavor.dart"
+      ]
+    },
+    {
+      "name": "lib/features/startup/startup_view.dart",
+      "description": "A startup screen widget responsible for initializing the application and displaying a loading state while performing initial startup logic. This view serves as the first screen users see, which handles critical app initialization tasks before navigating to the main app interface.",
+      "class_diagram": "@startuml\nclass StartupView {\n  +builder(context: BuildContext, viewModel: StartupViewModel)\n  +viewModelBuilder(context: BuildContext): StartupViewModel\n  +onViewModelReady(viewModel: StartupViewModel)\n}\n@enduml",
+      "methods": [
+        {
+          "name": "builder",
+          "description": "Constructs the visual representation of the startup screen, displaying a centered loading message and circular progress indicator",
+          "parameters": [
+            "BuildContext",
+            "StartupViewModel",
+            "Widget?"
+          ],
+          "return_type": "Widget"
+        },
+        {
+          "name": "viewModelBuilder",
+          "description": "Creates and returns the StartupViewModel instance for managing startup logic",
+          "parameters": [
+            "BuildContext"
+          ],
+          "return_type": "StartupViewModel"
+        },
+        {
+          "name": "onViewModelReady",
+          "description": "Triggers the startup initialization logic immediately after the view is rendered",
+          "parameters": [
+            "StartupViewModel"
+          ],
+          "return_type": null
+        }
+      ],
+      "dependencies": [
+        "flutter/material.dart",
+        "flutter/scheduler.dart",
+        "startup_viewmodel.dart",
+        "app_colors.dart",
+        "ui_helpers.dart",
+        "text_style.dart",
+        "stacked/stacked.dart"
+      ]
+    },
+    {
+      "name": "lib/ui/common/text_style.dart",
+      "description": "A centralized text styling utility that provides responsive and consistent typography across the application, defining standardized text styles for headings, body text, buttons, and captions with adaptive font sizes",
+      "class_diagram": "@startuml\nclass TextStyles {\n  + heading1Style(context: BuildContext): TextStyle\n  + heading2Style(context: BuildContext): TextStyle\n  + heading3Style(context: BuildContext): TextStyle\n  + bodyStyle(context: BuildContext): TextStyle\n  + subtitleStyle(context: BuildContext): TextStyle\n  + buttonTextStyle(context: BuildContext): TextStyle\n  + captionStyle(context: BuildContext): TextStyle\n}\n@enduml",
+      "methods": [
+        {
+          "name": "heading1Style",
+          "description": "Creates a large, bold primary text style for main headings with responsive font sizing",
+          "parameters": [
+            "BuildContext"
+          ],
+          "return_type": "TextStyle"
+        },
+        {
+          "name": "heading2Style",
+          "description": "Creates a medium-large, bold primary text style for secondary headings with responsive font sizing",
+          "parameters": [
+            "BuildContext"
+          ],
+          "return_type": "TextStyle"
+        },
+        {
+          "name": "bodyStyle",
+          "description": "Generates a standard body text style with medium font size and secondary text color",
+          "parameters": [
+            "BuildContext"
+          ],
+          "return_type": "TextStyle"
+        },
+        {
+          "name": "buttonTextStyle",
+          "description": "Creates a bold, white text style specifically designed for button labels with responsive sizing",
+          "parameters": [
+            "BuildContext"
+          ],
+          "return_type": "TextStyle"
+        }
+      ],
+      "dependencies": [
+        "flutter/material.dart",
+        "my_app/ui/common/app_colors.dart",
+        "my_app/ui/common/ui_helpers.dart"
+      ]
+    },
+    {
+      "name": "lib/features/startup/startup_viewmodel.dart",
+      "description": "A startup view model responsible for initializing the application and performing initial navigation logic, ensuring a smooth and controlled app launch sequence",
+      "class_diagram": "@startuml\nclass StartupViewModel {\n  -_navigationService: NavigationService\n  +runStartupLogic(): Future\n}\n@enduml",
+      "methods": [
+        {
+          "name": "runStartupLogic",
+          "description": "Executes initial startup tasks such as delaying app launch and navigating to the home screen",
+          "parameters": null,
+          "return_type": "Future"
+        }
+      ],
+      "dependencies": [
+        "stacked",
+        "stacked_services",
+        "my_app/app/app.locator.dart",
+        "my_app/app/app.router.dart"
+      ]
+    },
+    {
+      "name": "lib/features/home/home_viewmodel.dart",
+      "description": "A view model for managing home screen state and interactions, providing counter functionality and UI service interactions using the Stacked MVVM architecture",
+      "class_diagram": "@startuml\nclass HomeViewModel {\n  - int _counter\n  + void incrementCounter()\n  + void showDialog()\n  + void showBottomSheet()\n}\n@enduml",
+      "methods": [
+        {
+          "name": "incrementCounter",
+          "description": "Increases the internal counter value and triggers UI rebuild",
+          "parameters": null,
+          "return_type": null
+        },
+        {
+          "name": "showDialog",
+          "description": "Displays a custom dialog with counter-specific information",
+          "parameters": null,
+          "return_type": null
+        },
+        {
+          "name": "showBottomSheet",
+          "description": "Presents a custom bottom sheet with predefined content",
+          "parameters": null,
+          "return_type": null
+        }
+      ],
+      "dependencies": [
         "package:stacked/stacked.dart",
-        "package:stacked_services/stacked_services.dart"
+        "package:stacked_services/stacked_services.dart",
+        "app/app.bottomsheets.dart",
+        "app/app.dialogs.dart",
+        "app/app.locator.dart"
+      ]
+    },
+    {
+      "name": "lib/features/home/home_view.dart",
+      "description": "A home screen widget that provides a user interface for basic app interactions, demonstrating core app functionality with a simple counter, dialog, and bottom sheet features",
+      "class_diagram": "@startuml\nclass HomeView {\n  +builder(BuildContext context, HomeViewModel viewModel)\n  +viewModelBuilder(BuildContext context)\n}\nclass HomeViewModel {\n  +incrementCounter()\n  +showDialog()\n  +showBottomSheet()\n  +String counterLabel\n}\n@enduml",
+      "methods": [
+        {
+          "name": "builder",
+          "description": "Constructs the home screen UI with a welcome card, counter section, and action buttons",
+          "parameters": [
+            "BuildContext",
+            "HomeViewModel",
+            "Widget?"
+          ],
+          "return_type": "Widget"
+        },
+        {
+          "name": "viewModelBuilder",
+          "description": "Creates and initializes the HomeViewModel for the view",
+          "parameters": [
+            "BuildContext"
+          ],
+          "return_type": "HomeViewModel"
+        },
+        {
+          "name": "incrementCounter",
+          "description": "Increases the counter value in the view model",
+          "parameters": null,
+          "return_type": null
+        },
+        {
+          "name": "showDialog",
+          "description": "Displays a custom dialog from the view model",
+          "parameters": null,
+          "return_type": null
+        },
+        {
+          "name": "showBottomSheet",
+          "description": "Presents a bottom sheet modal from the view model",
+          "parameters": null,
+          "return_type": null
+        }
+      ],
+      "dependencies": [
+        "flutter/material.dart",
+        "stacked/stacked.dart",
+        "my_app/features/home/home_viewmodel.dart",
+        "my_app/ui/common/app_colors.dart",
+        "my_app/ui/common/text_style.dart",
+        "my_app/ui/common/ui_helpers.dart"
       ]
     }
   ],
@@ -864,7 +655,7 @@
       "purpose": "Creating gaps in layouts"
     }
   ],
-  "sequence_diagram": "@startuml\nactor User\nparticipant main\nparticipant AppView\nparticipant StartupView\nparticipant StartupViewModel\nparticipant HomeView\nparticipant HomeViewModel\n\nUser -> main: Launch app\nmain -> AppView: Create and run\nAppView -> StartupView: Initialize\nStartupView -> StartupViewModel: Run startup logic\nStartupViewModel -> HomeView: Navigate on completion\nHomeView -> HomeViewModel: Initialize\nUser -> HomeView: Interact\nHomeView -> HomeViewModel: Handle user actions\nHomeViewModel -> HomeView: Update UI\nHomeViewModel -> DialogService: Show dialog\nHomeViewModel -> BottomSheetService: Show bottom sheet\n@enduml",
-  "state_management_flow": "The application uses the Stacked architecture for state management. Each view has a corresponding ViewModel that handles the business logic and state for that view. The ViewModels are responsible for updating the UI, interacting with services (e.g., DialogService, BottomSheetService), and managing the application's overall state. The app.locator.dart file sets up the necessary dependency injections, allowing the ViewModels to access the required services.",
-  "navigation_flow": "The application's navigation is managed using the Stacked Router, defined in app.router.dart. The main entry point is the AppView, which initializes the Stacked architecture and displays the StartupView. After the startup logic is completed, the StartupViewModel navigates to the HomeView. The HomeView allows the user to interact with the application, triggering updates to the HomeViewModel, which in turn updates the UI and can show dialogs or bottom sheets as needed."
+  "sequence_diagram": "@startuml\nactor User\nparticipant main\nparticipant AppView\nparticipant StartupView\nparticipant StartupViewModel\nparticipant HomeView\nparticipant HomeViewModel\n\nUser -> main: Launch app\nmain -> AppView: Initialize app\nAppView -> StartupView: Display initial screen\nStartupView -> StartupViewModel: Trigger startup logic\nStartupViewModel -> HomeView: Navigate after initialization\nHomeView -> HomeViewModel: Prepare view state\nUser -> HomeView: Interact with counter\nHomeViewModel -> HomeView: Update UI\nHomeViewModel -> DialogService: Trigger dialog\nHomeViewModel -> BottomSheetService: Show bottom sheet\n@enduml",
+  "state_management_flow": "State management is handled through Stacked's reactive view models, where each view has a corresponding view model responsible for managing its state. The HomeViewModel demonstrates this by maintaining a counter, providing methods to increment it, and offering interactions like showing dialogs and bottom sheets. The BaseViewModel provides reactive capabilities, automatically rebuilding the UI when state changes occur.",
+  "navigation_flow": "Navigation is managed via the Stacked router, with predefined routes in app.router.dart. The typical flow begins at the StartupView, which initializes the app and programmatically navigates to the HomeView. The NavigationService enables programmatic navigation between screens, supporting both push and replace navigation strategies, with type-safe route definitions and optional parameters."
 }
